@@ -2,12 +2,6 @@
 	import stateStore from '../../stores/state';
 
 	import { _ } from 'svelte-i18n';
-	import { locale } from 'svelte-i18n';
-
-	export function changeLanguage(lang: string) {
-		locale.set(lang);
-	}
-	$: changeLanguage($stateStore.language);
 </script>
 
 <div class="container">

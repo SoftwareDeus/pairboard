@@ -41,7 +41,6 @@
 		"styled-svelte": "^1.2.0",
 		"svelte-click-outside": "^1.0.0",
 		"svelte-i18n": "^3.6.0",
-		"svelte-icons-pack": "^2.1.0",
-		"svelte-sortable-list": "^1.1.0"
+		"svelte-icons-pack": "^2.1.0"
 	}
 }
