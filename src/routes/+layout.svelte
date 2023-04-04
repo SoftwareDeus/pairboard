@@ -50,8 +50,9 @@
 		<a href="/settings">{$_('settings_label')}</a>
 	{/if}
 </nav>
-
-<slot />
+<div>
+	<slot />
+</div>
 
 <style>
 	:root {

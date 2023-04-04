@@ -5,6 +5,7 @@ import { locale } from 'svelte-i18n';
 type State = {
     user: UserData | null;
     language: string;
+    currentCardId: string | null;
 }
 
 type UserData = {
@@ -15,7 +16,7 @@ type UserData = {
     photoUrl: string;
 }
 
-const initialState: State = { user: null, language: "en" };
+const initialState: State = { user: null, language: "en", currentCardId: null };
 const storedState = typeof window !== 'undefined' ? localStorage.getItem("state") : null;
 const stateStore = writable<State>(storedState ? JSON.parse(storedState) : initialState);
 
@@ -24,7 +25,6 @@ stateStore.subscribe(state => {
 })
 
 export const setUser = (user: User) => {
-    console.log(user, "EINGELOGGT");
     stateStore.update(state => {
         state.user = {
             id: user.uid ?? "",

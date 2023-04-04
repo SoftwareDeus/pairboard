@@ -1,7 +1,8 @@
 <script lang="ts">
-	import ClickOutside from 'svelte-click-outside';
 	import AiOutlineFullscreen from 'svelte-icons-pack/ai/AiOutlineFullscreen';
 	import Icon from 'svelte-icons-pack/Icon.svelte';
+	import stateStore from '../../stores/state';
+	import type { Card } from '../../lib/types';
 
 	enum heights {
 		expanded = '600px',
@@ -9,63 +10,48 @@
 	}
 
 	type Props = {
-		icon: string;
-		text: string;
-		id: number;
+		card: Card;
 	};
 
 	type State = {
 		isActive: boolean;
 		order: number;
 	};
-	export let props: Props;
 
+	export let props: Props;
 	const state: State = {
 		isActive: false,
-		order: props.id
+		order: Number(props.card.id)
 	};
+
 	let height: string = heights.collapsed;
 
 	const toggleActive = () => {
-		if (!state.isActive) {
-			state.isActive = !state.isActive;
-			height = heights.expanded;
-		} else {
-			state.isActive = !state.isActive;
-			height = heights.collapsed;
-		}
-	};
-
-	const handleClickOutside = () => {
-		if (state.isActive) {
-			toggleActive();
-		}
+		$stateStore.currentCardId = props.card.id;
 	};
 </script>
 
-<ClickOutside on:clickoutside={handleClickOutside}>
-	<div
-		on:dblclick={toggleActive}
-		style={`order: ${state.order}; height: ${height}`}
-		class="Container"
-	>
-		<div class="Header">
-			<div class="Icon">
-				<img src={props.icon} alt="icon" width="24" height="24" />
-			</div>
-			<div class="Text">{props.text}</div>
+<div
+	on:dblclick={toggleActive}
+	style={`order: ${state.order}; height: ${height}`}
+	class="Container"
+>
+	<div class="Header">
+		<div class="Icon">
+			<img src={'favicon.png'} alt="icon" width="24" height="24" />
 		</div>
+		<div class="Text">{props.card.text}</div>
+	</div>
 
-		<div class="Content">MAIN</div>
+	<div class="Content">MAIN</div>
 
-		<div class="Footer">
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<div on:click={toggleActive} class="FullScreenIcon">
-				<Icon src={AiOutlineFullscreen} />
-			</div>
+	<div class="Footer">
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<div on:click={toggleActive} class="FullScreenIcon">
+			<Icon src={AiOutlineFullscreen} />
 		</div>
 	</div>
-</ClickOutside>
+</div>
 
 <style>
 	.FullScreenIcon {
@@ -74,7 +60,7 @@
 	}
 	.Footer {
 		display: grid;
-		place-items: end; 	
+		place-items: end;
 		position: absolute;
 		bottom: 0;
 		width: 100%;

@@ -5,8 +5,6 @@ import type { RequestHandler } from './$types';
 
 export const GET = (({ url }) => {
 	const searchTerm = url.searchParams.get('searchTerm')?.toString();
-	console.log('searchTerm', searchTerm);
-
 	let tracks: Track[] = [];
 
 	if (!searchTerm) {
