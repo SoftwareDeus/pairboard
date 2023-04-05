@@ -1,9 +1,10 @@
 //Create CRUD methods for card table
 //TODO: Fix createEntry... it's not working
+//TODO: there has to be a better way for getting the path
 import Database from 'better-sqlite3';
 import { DB_PATH } from '$env/static/private';
 
-const db = new Database(DB_PATH, { verbose: console.log });
+const db = new Database(process.env.DB_PATH ?? DB_PATH, { verbose: console.log });
 import type { ListEntry } from "$lib/types";
 
 export function getEntrysFromList(listId: string): ListEntry[] {

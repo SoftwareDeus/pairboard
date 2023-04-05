@@ -1,8 +1,8 @@
-//Create CRUD methods for card table
 import Database from 'better-sqlite3';
 import { DB_PATH } from '$env/static/private';
 
-const db = new Database(DB_PATH, { verbose: console.log });
+const db = new Database(process.env.DB_PATH ?? DB_PATH, { verbose: console.log });
+console.log(process.env.DB_PATH, db);
 import type { Card } from '../models/card';
 
 export function searchCards(searchTerm: string, limit = 50): Card[] {
@@ -35,6 +35,7 @@ export function updateCard(card: Card): Card {
 }
 
 export function createCard(card: Card): Card {
+    console.log(card);
     const sql = `insert into card (text) values ($text)`;
     const stmnt = db.prepare(sql);
     const info = stmnt.run(card);

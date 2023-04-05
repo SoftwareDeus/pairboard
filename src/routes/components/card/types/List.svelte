@@ -1,8 +1,6 @@
 <script lang="ts">
-	/*
-	TODO: Change listId ot cardId in DB for constistency
-	TODO: Rename name to text in type and db
-	*/
+	/*	TODO: Change listId ot cardId in DB for constistency
+	TODO: Rename name to text in type and db */
 	import type { Card, ListEntry } from '../../../../lib/types';
 
 	export let card: Card;
