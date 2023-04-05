@@ -1,8 +1,10 @@
 <script lang="ts">
+	import { _ } from 'svelte-i18n';
 	import stateStore from '../stores/state';
 	import Card from './components/card/Card.svelte';
 	import List from './components/List.svelte';
 	import { fly } from 'svelte/transition';
+	import type { ObjectId } from 'mongodb';
 
 	async function add() {
 		const response = await fetch('/api/createCard', {
@@ -15,13 +17,8 @@
 		response.json().then((data) => ($stateStore.currentCardId = data.id));
 	}
 
-	export let data;
 	$: cards = [];
-	$: card = getCardFromStore($stateStore.currentCardId ?? '');
-
-	async function getCardFromStore(id: string) {
-		return await getCard(id);
-	}
+	$: card = getCard($stateStore.currentCardId);
 
 	async function get() {
 		const response = await fetch('/api/getCards', {
@@ -34,7 +31,7 @@
 		cards = await response.json();
 	}
 
-	async function getCard(id: string) {
+	async function getCard(id: ObjectId | null) {
 		if (!id) return;
 		const response = await fetch(`/api/getCardById/?id=${id}`, {
 			method: 'GET',
@@ -49,7 +46,7 @@
 
 {#if $stateStore.currentCardId}
 	{#await card}
-		Loading
+		{$_('loading_label')}
 	{:then card}
 		<div transition:fly>
 			<Card {card} />
@@ -59,8 +56,8 @@
 	<div transition:fly>
 		<List items={cards} />
 		<div style="display: flex;">
-			<button class="outline" on:click={add}> Add Card </button>
-			<button class="secondary" on:click={get}> Get Cards </button>
+			<button class="outline" on:click={add}> {$_('add_card_label')} </button>
+			<button class="secondary" on:click={get}> {$_('get_cards_label')}</button>
 		</div>
 	</div>
 {/if}

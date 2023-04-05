@@ -18,6 +18,6 @@ module.exports = {
 		node: true
 	},
 	rules: {
-    "max-len": ["error", { "code": 100 }]
-  }
+		'max-len': ['error', { code: 100 }]
+	}
 };

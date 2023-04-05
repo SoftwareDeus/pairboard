@@ -1,10 +1,10 @@
-import type { ListEntry } from '$lib/types';
+import type { CreateEntryRequest, ListEntry } from '$lib/types';
 import { json } from '@sveltejs/kit';
 import { createEntry } from '../../../services/list';
 
 export const POST = async ({request}) => {
-    const entry = await request.json();
-    const newEntry: ListEntry = await createEntry(entry);
+    const createEntryRequest: CreateEntryRequest = await request.json();
+    const newEntry: ListEntry = await createEntry(createEntryRequest);
     
 	return json(newEntry);
 }  ;

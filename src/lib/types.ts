@@ -1,13 +1,24 @@
+import type { ObjectId } from 'mongodb';
+
 export type Card = {
-    id: string;
-    text: string;
-    type: string;
+	_id: ObjectId;
+	index: number;
+	text: string;
+	type: string;
+	created_at: string;
+	updated_at: string;
 };
 
 export type ListEntry = {
-    id: string;
-    listId: string;
-    name: string;
-    created_at: string;
-    updated_at: string;
+	_id: ObjectId;
+	index: number;
+	card_id: ObjectId;
+	name: string;
+	created_at: string;
+	updated_at: string;
+};
+
+export type CreateEntryRequest = {
+	name: string;
+	card_id: ObjectId;
 };

@@ -21,13 +21,13 @@
 	export let props: Props;
 	const state: State = {
 		isActive: false,
-		order: Number(props.card.id)
+		order: Number(props.card.index)
 	};
 
 	let height: string = heights.collapsed;
 
 	const toggleActive = () => {
-		$stateStore.currentCardId = props.card.id;
+		$stateStore.currentCardId = props.card._id;
 	};
 </script>
 

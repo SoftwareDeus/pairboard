@@ -48,7 +48,7 @@
 	}
 	.Toolbar {
 		display: flex;
-		justify-content: space-between;
+		justify-content: space-around;
 	}
 	.Header {
 		padding-top: 4px;
