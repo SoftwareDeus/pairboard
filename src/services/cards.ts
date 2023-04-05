@@ -1,43 +1,76 @@
-import Database from 'better-sqlite3';
-import { DB_PATH } from '$env/static/private';
+import { MongoClient, Db } from 'mongodb';
+import type { Card } from "$lib/types";
+import { MONGODB_URI } from '$env/static/private';
 
-const db = new Database(process.env.DB_PATH ?? DB_PATH, { verbose: console.log });
-console.log(process.env.DB_PATH, db);
-import type { Card } from '../models/card';
+const uri = MONGODB_URI ?? process.env.MONGODB_URI;
+const client = new MongoClient(uri);
+let db: Db;
 
-export function searchCards(searchTerm: string, limit = 50): Card[] {
-    const sql = `select * from card where lower(text)
-     like lower('%' || $searchTerm || '%') limit $limit`;
-    const stmnt = db.prepare(sql);
-    const rows = stmnt.all({ searchTerm, limit });
-    return rows as Card[];
+async function connectDB() {
+  try {
+    await client.connect();
+    console.log("Connected successfully to server");
+    db = client.db('mydb');
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
 }
 
-export function getCards(): Card[] {
-    const sql = `select * from card`;
-    const stmnt = db.prepare(sql);
-    const rows = stmnt.all();
-    return rows as Card[];
+await connectDB();
+
+export async function getCards(): Promise<Card[]> {
+  try {
+    const collection = db.collection('cards');
+    const result = await collection.find().toArray();
+    return result as unknown as Card[];
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
 }
 
-export function getCardById(cardId: number): Card {
-    const sql = `select * from card where id = $cardId`;
-    const stmnt = db.prepare(sql);
-    const row = stmnt.get({ cardId });
-    return row as Card;
+export async function getCardById(cardId: string): Promise<Card> {
+  try {
+    const collection = db.collection('cards');
+    const result = await collection.findOne({ id: cardId });
+    return result as unknown as Card;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
 }
 
-export function updateCard(card: Card): Card {
-    const sql = `update card set text = $text where id = $id`;
-    const stmnt = db.prepare(sql);
-    stmnt.run(card);
+export async function updateCard(card: Card): Promise<Card> {
+  try {
+    const collection = db.collection('cards');
+    const result = await collection.updateOne({ id: card.id }, { $set: { text: card.text } });
     return card;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
 }
 
-export function createCard(card: Card): Card {
-    console.log(card);
-    const sql = `insert into card (text) values ($text)`;
-    const stmnt = db.prepare(sql);
-    const info = stmnt.run(card);
-    return { ...card, id: info.lastInsertRowid.toString() };
+export async function createCard(card: Card): Promise<Card> {
+  try {
+    const collection = db.collection('cards');
+    const info = await collection.insertOne(card);
+    const lastInsertRowid = info.insertedId.toString();
+    const result = { ...card, id: lastInsertRowid, listId: lastInsertRowid };
+    return result;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
+export async function deleteCard(cardId: string): Promise<void> {
+  try {
+    const collection = db.collection('cards');
+    await collection.deleteOne({ id: cardId });
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
 }

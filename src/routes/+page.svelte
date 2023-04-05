@@ -16,7 +16,7 @@
 	}
 
 	export let data;
-	$: cards = data.cards;
+	$: cards = [];
 	$: card = getCardFromStore($stateStore.currentCardId ?? '');
 
 	async function getCardFromStore(id: string) {

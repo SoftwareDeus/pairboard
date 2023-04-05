@@ -1,38 +1,66 @@
-//Create CRUD methods for card table
-//TODO: Fix createEntry... it's not working
-//TODO: there has to be a better way for getting the path
-import Database from 'better-sqlite3';
-import { DB_PATH } from '$env/static/private';
-
-const db = new Database(process.env.DB_PATH ?? DB_PATH, { verbose: console.log });
+import { MongoClient, Db } from 'mongodb';
 import type { ListEntry } from "$lib/types";
+import { MONGODB_URI } from '$env/static/private';
 
-export function getEntrysFromList(listId: string): ListEntry[] {
-    const sql = `select * from listEntry where list_id = $listId`;
-    const stmnt = db.prepare(sql);
-    const rows = stmnt.all({ listId });
-    return rows as ListEntry[];
+const uri = MONGODB_URI ?? process.env.MONGODB_URI;
+const client = new MongoClient(uri);
+let db: Db;
+
+async function connectDB() {
+  try {
+    await client.connect();
+    console.log("Connected successfully to server");
+    db = client.db('mydb');
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
 }
 
-export function getEntryById(entryId: string): ListEntry {
-    const sql = `select * from listEntry where id = $entryId`;
-    const stmnt = db.prepare(sql);
-    const row = stmnt.get({ entryId });
-    return row as ListEntry;
+connectDB();
+
+export async function getEntrysFromList(listId: string): Promise<ListEntry[]> {
+  try {
+    const collection = db.collection('listEntry');
+    const result = await collection.find({ list_id: listId }).toArray();
+    return result as unknown as ListEntry[];
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
 }
 
-export function updateEntry(entry: ListEntry): ListEntry {
-    const sql = `update listEntry set text = $text where id = $id`;
-    const stmnt = db.prepare(sql);
-    stmnt.run(entry);
+export async function getEntryById(entryId: string): Promise<ListEntry> {
+  try {
+    const collection = db.collection('listEntry');
+    const result = await collection.findOne({ id: entryId });
+    return result as unknown as ListEntry;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
+export async function updateEntry(entry: ListEntry): Promise<ListEntry> {
+  try {
+    const collection = db.collection('listEntry');
+    const result = await collection.updateOne({ id: entry.id }, { $set: { text: entry.name } });
     return entry;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
 }
-export function createEntry(entry: ListEntry): ListEntry {
-    const sql = 'INSERT INTO listEntry (name, listId, created_at, updated_at) VALUES (?, ?, ?, ?)';
-    const stmnt = db.prepare(sql);
-    const info = stmnt.run(entry.name, entry.listId, entry.created_at, entry.updated_at);
-    const lastInsertRowid = info.lastInsertRowid.toString();
+
+export async function createEntry(entry: ListEntry): Promise<ListEntry> {
+  try {
+    const collection = db.collection('listEntry');
+    const info = await collection.insertOne(entry);
+    const lastInsertRowid = info.insertedId.toString();
     const result = { ...entry, id: lastInsertRowid, listId: lastInsertRowid };
     return result;
+  } catch (e) {
+    console.error(e);
+    throw e;
   }
-
+}

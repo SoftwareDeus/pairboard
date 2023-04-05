@@ -4,10 +4,11 @@ import { createCard } from '../../../services/cards';
 
 //TODO:Create card is not correct
 
-export const GET = () => {
-    const card: Card = createCard({
+export  const GET =async () => {
+    const card: Card = await createCard({
         id: "1",
         text: 'test',
+        type: 'list'
     })
     console.log(card);
 	return json(card);

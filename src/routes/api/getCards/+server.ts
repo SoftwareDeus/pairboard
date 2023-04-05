@@ -3,8 +3,8 @@ import type { Card } from '../../../models/card';
 import { getCards } from '../../../services/cards';
 import type { RequestHandler } from './$types';
 
-export const GET = (() => {
-    const card: Card[] = getCards();
+export const GET = (async () => {
+    const cards: Card[] = await getCards();
 
-	return json(card);
+	return json(cards);
 }) satisfies RequestHandler;

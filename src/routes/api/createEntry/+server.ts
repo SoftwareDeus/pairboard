@@ -4,7 +4,7 @@ import { createEntry } from '../../../services/list';
 
 export const POST = async ({request}) => {
     const entry = await request.json();
-    const newEntry: ListEntry = createEntry(entry);
+    const newEntry: ListEntry = await createEntry(entry);
     
 	return json(newEntry);
 }  ;
