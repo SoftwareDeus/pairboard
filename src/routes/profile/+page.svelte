@@ -1,5 +1,5 @@
 <script>
-	import Login from './Login.svelte';
+	import Login from './components/Login.svelte';
 	import stateStore from '../../stores/state';
 	import { _ } from 'svelte-i18n';
 </script>

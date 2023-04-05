@@ -1,6 +1,7 @@
 <script lang="ts">
 	/*
 	TODO: Change listId ot cardId in DB for constistency
+	TODO: Rename name to text in type and db
 	*/
 	import type { Card, ListEntry } from '../../../../lib/types';
 
@@ -20,12 +21,13 @@
 		};
 
 		const body = JSON.stringify(_entry);
+
 		const response = await fetch('/api/createEntry', {
 			method: 'POST',
 			headers: {
 				'content-type': 'application/json'
 			},
-			body
+			body: body
 		});
 
 		const test = await response.json();

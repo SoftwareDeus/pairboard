@@ -47,13 +47,10 @@
 		width: 100%;
 	}
 	.Toolbar {
-		background-color: var(--primary);
 		display: flex;
 		justify-content: space-between;
 	}
 	.Header {
-		background-color: var(--secondary);
-		color: #fff;
 		padding-top: 4px;
 		padding-bottom: 4px;
 		display: grid;

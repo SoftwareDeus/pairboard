@@ -66,8 +66,6 @@
 		width: 100%;
 	}
 	.Header {
-		background-color: var(--primary);
-		color: #fff;
 		display: flex;
 		padding-top: 4px;
 		padding-bottom: 4px;

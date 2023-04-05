@@ -56,19 +56,17 @@
 
 <style>
 	:root {
-		--primary: #a7d0e0;
+		--primary: #d81b60;
 	}
 	nav {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		padding: 1rem;
-		background: var(--primary);
 		box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
 	}
 	a {
 		/* good color for babyblue background			 */
-		color: white;
 		font-weight: 600;
 		text-decoration: none;
 	}
