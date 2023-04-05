@@ -5,8 +5,8 @@
 		signInWithEmailAndPassword,
 		createUserWithEmailAndPassword
 	} from 'firebase/auth';
-	import { getAuth, signInWithPopup, OAuthProvider } from 'firebase/auth';
-	import stateStore, { setUser } from '../../stores/state';
+	import { getAuth, signInWithPopup } from 'firebase/auth';
+	import { setUser } from '../../../stores/state';
 
 	import { _ } from 'svelte-i18n';
 

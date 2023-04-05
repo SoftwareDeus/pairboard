@@ -1,11 +1,8 @@
 <script lang="ts">
 	import stateStore from '../stores/state';
 	import Card from './components/card/Card.svelte';
-	import type { Card as CardType } from '../lib/types';
 	import List from './components/List.svelte';
-	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
-	import { stringify } from 'postcss';
 
 	async function add() {
 		const response = await fetch('/api/createCard', {
