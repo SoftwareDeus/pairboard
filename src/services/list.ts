@@ -34,12 +34,4 @@ export function createEntry(entry: ListEntry): ListEntry {
     const result = { ...entry, id: lastInsertRowid, listId: lastInsertRowid };
     return result;
   }
-  
-// export function createEntry(entry: ListEntry): ListEntry {
-//     const sql = `insert into listEntry (name, listId, created_at, updated_at) values ('${entry.name}', '${entry.listId}', Date('${entry.created_at}'), Date('${entry.updated_at}'))`;
-//         const stmnt = db.prepare(sql);
-//         const info = stmnt.run();
-//         const lastInsertRowid = info.lastInsertRowid.toString();
-//         const result = { ...entry, id: lastInsertRowid, listId: lastInsertRowid };
-//         return result;
-// }
+

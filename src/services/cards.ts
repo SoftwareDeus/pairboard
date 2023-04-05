@@ -6,7 +6,8 @@ const db = new Database(DB_PATH, { verbose: console.log });
 import type { Card } from '../models/card';
 
 export function searchCards(searchTerm: string, limit = 50): Card[] {
-    const sql = `select * from card where lower(text) like lower('%' || $searchTerm || '%') limit $limit`;
+    const sql = `select * from card where lower(text)
+     like lower('%' || $searchTerm || '%') limit $limit`;
     const stmnt = db.prepare(sql);
     const rows = stmnt.all({ searchTerm, limit });
     return rows as Card[];
