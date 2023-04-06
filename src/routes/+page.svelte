@@ -1,39 +1,45 @@
 <script lang="ts">
-	import { _ } from 'svelte-i18n';
+	import type { Board, CreateBoardRequest } from '$lib/types';
+	import { onMount } from 'svelte';
 	import stateStore from '../stores/state';
-	import Card from './components/card/Card.svelte';
-	import List from './components/List.svelte';
 	import { fly } from 'svelte/transition';
-	import type { ObjectId } from 'mongodb';
 
-	async function add() {
-		const response = await fetch('/api/createCard', {
+	let boardId = '';
+	let newBoardName = '';
+	let boards: Board[] = [];
+
+	const getBoards = async () => {
+		const response = await fetch('/api/getBoards', {
 			method: 'GET',
 			headers: {
 				'content-type': 'application/json'
 			}
 		});
 
-		response.json().then((data) => ($stateStore.currentCardId = data.id));
-	}
+		boards = await response.json();
+	};
+	const handleCreate = async () => {
+		if (!$stateStore.user || newBoardName === '') return;
 
-	$: cards = [];
-	$: card = getCard($stateStore.currentCardId);
+		let request: CreateBoardRequest = {
+			name: newBoardName,
+			user_id: $stateStore.user.id
+		};
 
-	async function get() {
-		const response = await fetch('/api/getCards', {
-			method: 'GET',
+		const response = await fetch('/api/createBoard', {
+			method: 'POST',
 			headers: {
 				'content-type': 'application/json'
-			}
+			},
+			body: JSON.stringify(request)
 		});
 
-		cards = await response.json();
-	}
+		await getBoards();
+	};
+	const handleSearch = async () => {
+		if (boardId === '') return;
 
-	async function getCard(id: ObjectId | null) {
-		if (!id) return;
-		const response = await fetch(`/api/getCardById/?id=${id}`, {
+		const response = await fetch(`/api/getBoardById/?board_id=${boardId}`, {
 			method: 'GET',
 			headers: {
 				'content-type': 'application/json'
@@ -41,26 +47,55 @@
 		});
 
 		return await response.json();
-	}
+	};
+	onMount(async () => {
+		await getBoards();
+	});
 </script>
 
-{#if $stateStore.currentCardId}
-	{#await card}
-		{$_('loading_label')}
-	{:then card}
-		<div transition:fly>
-			<Card {card} />
-		</div>
-	{/await}
-{:else}
-	<div transition:fly>
-		<List items={cards} />
-		<div style="display: flex;">
-			<button class="outline" on:click={add}> {$_('add_card_label')} </button>
-			<button class="secondary" on:click={get}> {$_('get_cards_label')}</button>
-		</div>
+<div class="container">
+	<h1>Boards</h1>
+
+	<div class="boards">
+		{#each boards as board}
+			<a href={`/board/${board._id}`} in:fly={{ y: 50, duration: 500 }} class="board">
+				<b>{board.name}</b>
+				<div>{board.user_id}</div>
+				<div>{board._id}</div>
+				<div>{new Date(board.created_at).toDateString()}</div>
+				<div>{new Date(board.updated_at).toDateString()}</div>
+			</a>
+		{/each}
 	</div>
-{/if}
+	<form style="display: flex; gap: 1em" on:submit={handleSearch}>
+		<input style="flex:8" bind:value={boardId} placeholder="Board..." />
+		<button style="flex:1" type="submit">Suchen</button>
+	</form>
+
+	<form style="display: flex; gap: 1em" on:submit={handleCreate}>
+		<input style="flex:8" placeholder="Name..." bind:value={newBoardName} />
+		<button style="flex:1" type="submit">Erstellen</button>
+	</form>
+</div>
 
 <style>
+	h1 {
+		text-align: center;
+	}
+	.board {
+		display: flex;
+		justify-content: space-between;
+		padding: 1em;
+		cursor: pointer;
+		flex-wrap: wrap;
+	}
+	.boards {
+		padding-bottom: 1em;
+		display: flex;
+		flex-direction: column;
+		gap: 1em;
+	}
+	.board:hover {
+		background-color: #f5f5f5;
+	}
 </style>

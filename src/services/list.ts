@@ -53,7 +53,20 @@ export async function updateEntry(entry: ListEntry): Promise<ListEntry> {
 	}
 }
 
-export async function createEntry({ card_id, name }: CreateEntryRequest): Promise<ListEntry> {
+export async function deleteEntry(entryId: ObjectId) {
+	try {
+		const collection = db.collection('listEntrys');
+		collection.findOneAndDelete({ _id: entryId });
+	}
+	catch(e) {
+		console.error(e);
+		throw e;
+	}
+}
+
+export async function createEntry(
+	{ card_id, name, user_id }: CreateEntryRequest
+): Promise<ListEntry> {
 	try {
 		const collection = db.collection('listEntrys');
 		const entry = {
@@ -61,7 +74,8 @@ export async function createEntry({ card_id, name }: CreateEntryRequest): Promis
 			card_id: new ObjectId(card_id),
 			name,
 			created_at: new Date().toISOString(),
-			updated_at: new Date().toISOString()
+			updated_at: new Date().toISOString(),
+			user_id
 		};
 		const info = await collection.insertOne(entry);
 		const lastInsertRowid = info.insertedId;

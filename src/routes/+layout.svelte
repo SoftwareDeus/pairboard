@@ -55,9 +55,6 @@
 </div>
 
 <style>
-	:root {
-		--primary: #d81b60;
-	}
 	nav {
 		display: flex;
 		justify-content: space-between;

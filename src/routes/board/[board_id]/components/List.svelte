@@ -1,13 +1,13 @@
 <script lang="ts">
-	import CardContainer from './CardContainer.svelte';
-	import type { Card } from '../../lib/types';
-
+	import CardContainer from './card/CardContainer.svelte';
+	import type { Card } from '../../../../lib/types';
+	import { fly } from 'svelte/transition';
 	export let items: Card[] = [];
 </script>
 
 <div class="List">
 	{#each items as card}
-		<CardContainer props={{ card }} />
+		<div in:fly={{ y: 50, duration: 500 }}><CardContainer props={{ card }} /></div>
 	{/each}
 </div>
 

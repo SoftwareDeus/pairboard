@@ -1,12 +1,11 @@
 <script lang="ts">
-	import ListCard from './types/List.svelte';
-
 	import AiOutlineClose from 'svelte-icons-pack/ai/AiOutlineClose';
 	import Icon from 'svelte-icons-pack/Icon.svelte';
 	import FiSettings from 'svelte-icons-pack/fi/FiSettings';
-	import stateStore from '../../../stores/state';
-	import type { Card } from '../../../lib/types';
-	import List from '../card/types/List.svelte';
+	import stateStore from '../../../../../stores/state';
+	import type { Card } from '../../../../../lib/types';
+	import CardList from './types/CardList.svelte';
+	import { getCardComponent } from '../hooks/getCardComponent';
 
 	export let card: Card;
 	const handleOpenSettings = () => {
@@ -30,8 +29,8 @@
 			</button>
 		</div>
 	</div>
-	<List {card} />
-	<div class="Footer">Foot</div>
+	<svelte:component this={getCardComponent(card.typeId)} {card} />
+	<div class="Footer" />
 </div>
 
 <style>

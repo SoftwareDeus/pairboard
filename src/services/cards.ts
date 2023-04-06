@@ -30,9 +30,23 @@ export async function getCards(): Promise<Card[]> {
 	}
 }
 
+export async function getCardsByBoardId(boardId: string): Promise<Card[]> {
+	try {
+		const collection = db.collection('cards');
+		const result = await collection.find({board_id: new ObjectId(boardId)}).toArray();
+
+		return result as unknown as Card[];
+	}
+		catch (e) {
+			console.error(e);
+			throw e;
+		}
+	}
+
+
 export async function getCardById(cardId: ObjectId): Promise<Card> {
 	try {
-		console.log(cardId);
+		(cardId);
 		const collection = db.collection('cards');
 		const result = await collection.findOne({ _id: new ObjectId(cardId) });
 		return result as unknown as Card;
@@ -45,7 +59,6 @@ export async function getCardById(cardId: ObjectId): Promise<Card> {
 export async function updateCard(card: Card): Promise<Card> {
 	try {
 		const collection = db.collection('cards');
-		const result = 
       await collection.updateOne({ id: card.index }, { $set: { text: card.text } });
 		return card;
 	} catch (e) {
@@ -54,15 +67,16 @@ export async function updateCard(card: Card): Promise<Card> {
 	}
 }
 
-export async function createCard(text: string, type: string): Promise<Card> {
+export async function createCard(text: string, typeId: number, board_id: ObjectId): Promise<Card> {
 	try {
 		const collection = db.collection('cards');
 		const card = {
 			index: (await collection.countDocuments()) + 1,
 			text,
-			type,
+			typeId: typeId,
 			created_at: new Date().toISOString(),
-			updated_at: new Date().toISOString()
+			updated_at: new Date().toISOString(),
+			board_id
 		};
 		const info = await collection.insertOne(card);
 		const lastInsertRowid = info.insertedId;

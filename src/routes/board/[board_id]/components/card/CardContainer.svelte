@@ -1,8 +1,10 @@
 <script lang="ts">
 	import AiOutlineFullscreen from 'svelte-icons-pack/ai/AiOutlineFullscreen';
 	import Icon from 'svelte-icons-pack/Icon.svelte';
-	import stateStore from '../../stores/state';
-	import type { Card } from '../../lib/types';
+	import stateStore from '../../../../../stores/state';
+	import type { Card } from '../../../../../lib/types';
+	import { getCardComponent } from '../hooks/getCardComponent';
+	import CardIcon from './icons/CardIcon.svelte';
 
 	enum heights {
 		expanded = '600px',
@@ -38,12 +40,14 @@
 >
 	<div class="Header">
 		<div class="Icon">
-			<img src={'favicon.png'} alt="icon" width="24" height="24" />
+			<img src={'/favicon.png'} alt={'/favicon.png'} width="24" height="24" />
 		</div>
 		<div class="Text">{props.card.text}</div>
 	</div>
 
-	<div class="Content">MAIN</div>
+	<div class="Content">
+		<CardIcon cardType={props.card.typeId} />
+	</div>
 
 	<div class="Footer">
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -54,6 +58,16 @@
 </div>
 
 <style>
+	.Content {
+		display: grid;
+		place-items: center;
+	}
+	.Text {
+		font-size: 1.2em;
+		font-weight: 600;
+		text-align: center;
+		width: 100%;
+	}
 	.FullScreenIcon {
 		padding-right: 4px;
 		cursor: pointer;
